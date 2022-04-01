@@ -1,18 +1,35 @@
 # Localstack 
 
-# Levantar el servicio
-`TMPDIR=$HOME/localstack/host_tmp_dir docker-compose up -d --build` 
+Esta imágen de docker tiene como objetivo levantar un ambiente similar a AWS utilizando [Localstack](blank:#https://localstack.cloud/) y [Portainer](blank:#https://www.portainer.io/)
 
-## S3:
-### Crear un bucket: 
-`aws --endpoint-url=http://localhost:4572 s3 mb s3://profile`
+ ***Debes tener instalado [AWS CLI](blank:#https://docs.aws.amazon.com/es_es/cli/v1/userguide/cli-chap-install.html)***
 
-### Listar contenido de un bucket: 
-`aws --endpoint-url=http://localhost:4572 s3 ls s3://profile`
 
-### Copiar contenido a un bucket 
-`aws --endpoint-url=http://localhost:4572 s3 cp test.txt s3://profile`
+
+## Como utilizar el proyecto
+```console
+# Definir carpeta donde se creará el proyecto
+foo@bar:~$ mkdir $HOME/localstack/host_tmp_dir
+
+# Clonar proyecto
+foo@bar:~$ git clone git@github.com:pmirand6/localstack.git localstack
+
+# Levantar el proyecto
+foo@bar:~$ TMPDIR=$HOME/localstack/host_tmp_dir docker-compose up -d --build
+```
+
+## Utilizando S3:
+```console
+# Crear un bucket: 
+foo@bar:~$ aws --endpoint-url=http://localhost:4572 s3 mb s3://profile
+
+# Listar contenido de un bucket: 
+foo@bar:~$ aws --endpoint-url=http://localhost:4572 s3 ls s3://profile
+
+# Copiar contenido a un bucket 
+foo@bar:~$ aws --endpoint-url=http://localhost:4572 s3 cp test.txt s3://profile
+```
 
 ### TODO:
 - Testing local de conexión de SNS y SQS
-- Deploy desde Terraform
+- Crear servicios con Terraform
