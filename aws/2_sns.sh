@@ -16,5 +16,5 @@ updated-profile-success-ar )
 
 for i in "${array[@]}"
 do
- awslocal sns create-topic --name "$i"
+ aws --endpoint-url=http://localhost:4566 --region us-west-2 sns create-topic --name "$i"
 done

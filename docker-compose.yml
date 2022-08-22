@@ -1,33 +1,49 @@
 version: '3.7'
 services:
   localstack:
-    image: localstack/localstack:0.11.1
+    container_name: 'localstack'
+    image: localstack/localstack:latest
     ports:
-      - "4567-4584:4567-4584"
-      - "${LS_PORT_WEB_UI-8080}:${LS_PORT_WEB_UI-8080}"
-
+      - "4566:4566"
+      - "53285:8080"
     environment:
-      - SERVICES=${LS_SERVICES- }
-      - DEBUG=${DEBUG- }
-      - DATA_DIR=/tmp/localstack/data
-      - PORT_WEB_UI=${LS_PORT_WEB_UI- }
-      - DOCKER_HOST=unix:///var/run/docker.sock
-
+      - SERVICES=s3,sqs,sns             #list of services to be mocked
+      - AWS_DEFAULT_REGION=us-west-2        #AWS region
+      - DEFAULT_REGION=us-west-2
+      - AWS_ACCESS_KEY_ID=1234      #access key for authentication
+      - AWS_SECRET_ACCESS_KEY=1234  #secret key for authentication
+      - DATA_DIR=/tmp_dir/localstack/data   #container directory. enables persistence
+      - DEBUG=1
+      - HOSTNAME_EXTERNAL=localstack
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      #- ./setup/init2.sh:/docker-entrypoint-initaws.d/setup.sh #initialization code. more on that later :)
+      - ./aws:/docker-entrypoint-initaws.d/ #initialization code. more on that later :)
+      - /var/run/docker.sock:/var/run/docker.sock
+      
+    networks:
+      wm-localstack-network:
+        aliases:
+          - "localstack.local"
        
   # container for portainer
   #    entrypoint: http://localhost:9000
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:latest
-    command: -H unix:///var/run/docker.sock
-    restart: always
-    ports:
-      - "1111:9000"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+  # portainer:
+  #   container_name: portainer
+  #   image: portainer/portainer-ce:latest
+  #   command: -H unix:///var/run/docker.sock
+  #   restart: always
+  #   ports:
+  #     - "1111:9000"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - portainer_data:/data
+#
+# Networks definitions
+#
+networks:
+  wm-localstack-network:
+      external: true
+      name: "shared-network"
   
 volumes:
   nginx-data:

@@ -3,7 +3,15 @@
 echo "-------------------------------------Script-01"
 
 echo "########### Creating SQS ###########"
-array=( pomelo cards cards_sns bank bank_sns profile profile_sns )
+array=( bank-ar
+        bank-sns-ar
+        card-ar
+        card-sns-ar
+        cashout-ar
+        cashout-sns-ar
+        pomelo-ar
+        profile-ar
+        profile-sns-ar )
 
 for i in "${array[@]}"
 do
